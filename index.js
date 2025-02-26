@@ -17,6 +17,7 @@ const perform = async () => {
         .map(el => el.textContent.trim());
     });
 
+    // a la zob
     const priceText = headings.find(text => /^\$\d+(\.\d+)?\s*USD$/.test(text));
     console.log("Texte du prix trouvé :", priceText);
 
