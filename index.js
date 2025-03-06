@@ -14,6 +14,8 @@ const perform = async () => {
 
         await page.goto('https://crypto.com/price/pinetwork', { waitUntil: 'networkidle2' });
 
+        await new Promise(res=>setTimeout(res,5000))
+
         const headings = await page.evaluate(() => {
             return Array.from(document.querySelectorAll('.chakra-heading'))
             .map(el => el.textContent.trim());
@@ -21,7 +23,7 @@ const perform = async () => {
 
         // a la zob
         const priceText = headings.find(text => /^\$\d+(\.\d+)?\s*USD$/.test(text));
-        console.log("Texte du prix trouvé :", priceText);
+        console.log("PI VALUE =", priceText);
 
         if (!priceText) {
             await browser.close();
@@ -39,7 +41,7 @@ const perform = async () => {
             const netWorth = totalWorth * 0.7;
             const taxDues = totalWorth * 0.3;
 
-            console.log("PI VALUE =", value);
+            // console.log("PI VALUE =", value);
             console.log("Total worth =", totalWorth);
             console.log("Net worth =", netWorth);
             console.log("Tax dues =", taxDues);
@@ -48,9 +50,15 @@ const perform = async () => {
 
         await browser.close();
 
-    } catch {}
+    } catch (e) {
+        console.log("error occured:",e)
+    }
+
+    await new Promise(res=>setTimeout(perform, 30_000))
 };
 
 console.log("EXECUTION");
 
-setInterval(perform,5000);
+perform();
+
+
