@@ -24,7 +24,7 @@ const perform = async () => {
         // a la zob
         const priceText = headings.find(text => /^\$\d+((\.|\,)\d+)?\s*USD$/.test(text));
         console.log("PI VALUE =", priceText);
-s
+
         if (!priceText) {
             console.log("headings",headings)
             await browser.close();
