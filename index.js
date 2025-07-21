@@ -52,13 +52,13 @@ const perform = async () => {
         await browser.close();
 
     } catch (e) {
-        console.log("error occured:",e)
+        console.log("/!\\ An error occured /!\\");
     }
 
     await new Promise(res=>setTimeout(perform, 30_000))
 };
-
-console.log("EXECUTION");
+console.clear();
+console.log("\nEXECUTION");
 
 perform();
 
