@@ -5,7 +5,8 @@ const PI_AMOUNT = 1111;
 const perform = async () => {
     try {
 
-        const browser = await puppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch();
+
         const page = await browser.newPage();
 
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' +
@@ -20,6 +21,7 @@ const perform = async () => {
             return Array.from(document.querySelectorAll('.chakra-heading'))
             .map(el => el.textContent.trim());
         });
+
 
         // a la zob
         const priceText = headings.find(text => /^\$\d+((\.|\,)\d+)?\s*USD$/.test(text));
