@@ -1,67 +1,29 @@
-const puppeteer = require('puppeteer');
+const axios = require('axios');
 
 const PI_AMOUNT = 1111;
 
 const perform = async () => {
-    try {
+  try {
+    const res = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=pi-network&vs_currencies=usd');
 
-        const browser = await puppeteer.launch();
+    const value = res.data["pi-network"].usd;
 
-        const page = await browser.newPage();
+    console.log("PI VALUE =", value);
 
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' +
-            'AppleWebKit/537.36 (KHTML, like Gecko) ' +
-            'Chrome/115.0.0.0 Safari/537.36');
+    const totalWorth = value * PI_AMOUNT;
+    const netWorth = totalWorth * 0.7;
+    const taxDues = totalWorth * 0.3;
 
-        await page.goto('https://crypto.com/price/pinetwork', { waitUntil: 'networkidle2' });
+    console.log("Total worth =", totalWorth);
+    console.log("Net worth =", netWorth);
+    console.log("Tax dues =", taxDues);
+    console.log("\n================\n");
 
-        await new Promise(res=>setTimeout(res,5000))
+  } catch (e) {
+    console.log("Erreur API", e.response?.data || e.message);
+  }
 
-        const headings = await page.evaluate(() => {
-            return Array.from(document.querySelectorAll('.chakra-heading'))
-            .map(el => el.textContent.trim());
-        });
-
-
-        // a la zob
-        const priceText = headings.find(text => /^\$\d+((\.|\,)\d+)?\s*USD$/.test(text));
-        console.log("PI VALUE =", priceText);
-
-        if (!priceText) {
-            console.log("headings",headings)
-            await browser.close();
-            return;
-        }
-
-        const value = parseFloat(
-            priceText.replace(/[^0-9.,]/g, '').replace(',', '.')
-        );
-
-        if (isNaN(value)) {
-            console.log("Erreur : valeur non valide extraite");
-        } else {
-            const totalWorth = value * PI_AMOUNT;
-            const netWorth = totalWorth * 0.7;
-            const taxDues = totalWorth * 0.3;
-
-            // console.log("PI VALUE =", value);
-            console.log("Total worth =", totalWorth);
-            console.log("Net worth =", netWorth);
-            console.log("Tax dues =", taxDues);
-            console.log("\n================");
-        }
-
-        await browser.close();
-
-    } catch (e) {
-        console.log("/!\\ An error occured /!\\");
-    }
-
-    await new Promise(res=>setTimeout(perform, 30_000))
+//   setTimeout(perform, 30000);
 };
-console.clear();
-console.log("\nEXECUTION");
 
 perform();
-
-
